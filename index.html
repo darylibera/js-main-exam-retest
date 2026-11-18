@@ -1,70 +1,92 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <!-- tails -->
-         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-         <!-- icon -->
-          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.css" integrity="sha512-x9WwyMYBnlXMNQ6kQ/Lyzu1NqIhLQKL5Oq6xByfXuRj7s9CskyCbLv/1IjqzJmXwFXWr0ov6jBV7Qbc0hh9nHg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- icon -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.css"
+      integrity="sha512-x9WwyMYBnlXMNQ6kQ/Lyzu1NqIhLQKL5Oq6xByfXuRj7s9CskyCbLv/1IjqzJmXwFXWr0ov6jBV7Qbc0hh9nHg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
 
-          <style>
-            html{
-                scroll-behavior: smooth;
-            }
-          </style>
-
-</head>
-<body class="bg-amber-200 ">
-    <header class="w-full px-2 py-4 border-b-1 border-b-black/50 bg-amber-100 flex justify-between items-center">
-        <h1 class="uppercase text-xl font-bold">
-            recipes
-        </h1>
-        <div class="flex justify-between items-center">
-            <input class="py-2 px-3 border-1 border-black rounded-[100px_0_0_100px] min-w-0" placeholder="search recipies" type="search"  id="search">
-            <button class="py-2 px-3 border-1 border-black rounded-[0_100px_100px_0] -ms-[1px]" onclick="searchInput()">
-                Search
-            </button>
-        </div>
-        <a class="font-bold mx-1 py-2 px-3 border-1 border-red-600 rounded-full text-red-600" href="#favourites">
-                    Favourites
-            </a>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+    </style>
+  </head>
+  <body class="bg-amber-200 relative">
+    <div
+      id="edit"
+      class="bg-amber-100/20 backdrop-blur z-100 fixed top-0 right-0 left-0 bottom-0 flex items-center justify-center hidden"
+    ></div>
+    <header
+      class="w-full px-2 py-4 border-b-1 border-b-black/50 bg-amber-100 flex justify-between items-center flex-col gap-2"
+    >
+      <h1 class="uppercase text-xl font-bold">recipes</h1>
+      <div class="flex justify-between items-center">
+        <input
+          class="py-2 px-3 border-1 border-black rounded-[100px_0_0_100px] min-w-0"
+          placeholder="search recipies"
+          type="search"
+          id="search"
+        />
+        <button
+          class="py-2 px-3 border-1 border-black rounded-[0_100px_100px_0] -ms-[1px] cursor-pointer"
+          onclick="searchInput()"
+        >
+          Search
+        </button>
+      </div>
+      <a
+        class="font-bold mx-1 py-2 px-3 border-1 border-red-600 rounded-full text-red-600"
+        href="#favourites"
+      >
+        Favourites
+      </a>
     </header>
     <main class="w-full h-auto">
+      <div
+        id="searchResult"
+        class="flex w-full p-2 gap-2 items-center overflow-x-auto"
+      ></div>
 
-        <div id="searchResult" class="flex w-full p-2 gap-2 items-center overflow-x-auto ">
-
-        </div>
-
-            <section id="results" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-4 gap-3 p-2 w-full">
-                
-                
-            </section>
-            <h2 class="text-xl text-center font-bold w-full border-b-2 mx-3">
-                FAVOURITES
-            </h2>
-            <section id="favourites" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-4 gap-3 p-2 w-full">
-                
-                
-            </section>
+      <section
+        id="results"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-4 gap-3 p-2 w-full"
+      ></section>
+      <h2 class="text-xl text-center font-bold w-auto border-b-2 mx-3">
+        FAVOURITES
+      </h2>
+      <section
+        id="favourites"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-4 gap-3 p-2 w-full"
+      ></section>
     </main>
-</body>
-<script>
-    let apiRequest = null
-    let favData= JSON.parse(localStorage.getItem('recipes')) || []
-    const displayData = ()=>{
-        const result = document.querySelector("#results")
-        apiRequest.map((each,index)=>(result.innerHTML+=`<article class="flex flex-col bg-amber-300 rounded-sm border-1 border-white shadow-sm text-center p-2 hover:shadow-[0_0_10px_black] hover:scale-[1.01] transition-all duration-370 ease-in-out">
-                    <div class="w-full my-1  relative">
-                        <span class="absolute top-0 left-0 text-green-500 text-shadow-xs font-bold text-sm">${each.id}</span>
-                        <h2 class="font-bold text-white text-shadow-sm">${each.name}</h2>
+  </body>
+  <script>
+    let apiRequest = null;
+    let favData = JSON.parse(localStorage.getItem("recipes")) || [];
+    const displayData = () => {
+      const result = document.querySelector("#results");
+      apiRequest.map(
+        (each, index) =>
+          (result.innerHTML += `<article class="flex flex-col bg-amber-300 rounded-sm border-1 border-white shadow-sm text-center p-2 hover:shadow-[0_0_10px_black] hover:scale-[1.01] transition-all duration-370 ease-in-out group relative">
+            <span class="absolute top-0 left-1 text-green-500 text-shadow-xs font-bold text-sm">${each.id}</span>
+                    <div class="w-full my-1 ">
+                        <h2 class="font-bold text-white text-shadow-sm truncate">${each.name}</h2>
                     </div>
                     
                     <div class="w-auto h-auto rounded-sm overflow-hidden border-1 border-black mb-1 relative">
-                        <span class="absolute top-1 left-1 text-yellow-500 text-shadow-xs font-bold"><i class="fa-solid fa-star text-sm"></i> ${each.rating}</span>
-                        <img class="h-full w-full object-cover" src="${each.image}" alt="${each.name}">
-                        <button class="absolute top-1 right-1 text-red-600 text-shadow-xs font-bold p-0 hover:scale-[1.2] active:scale-[0.9] active:text-red-600 hover:text-red-700 transition-all duration-350 ease-in-out" title="ADD TO FAVOUTITES" onclick="addToFav(${each.id})">
+                        <span class="absolute top-1 left-1 text-yellow-500 text-shadow-xs font-bold z-99"><i class="fa-solid fa-star text-sm"></i> ${each.rating}</span>
+                        <img class="h-full w-full object-cover group-hover:scale-[1.05] transition-all duration-350 ease-in-out" src="${each.image}" alt="${each.name}">
+                        <button class="absolute top-1 right-1 text-red-600 text-shadow-xs font-bold p-0 hover:scale-[1.2] active:scale-[0.9] active:text-red-600 hover:text-red-700 transition-all duration-350 ease-in-out cursor-pointer" title="ADD TO FAVOUTITES" onclick="addToFav(${each.id})">
                             <i class="fa-regular fa-heart"></i>
                         </button>
                         <span class="absolute bottom-0.5 right-0.5 leading-none p-1 text-xs font-medium bg-green-500 border-1   rounded-full">
@@ -80,114 +102,122 @@
                     </div>
 
 
-                </article>`))
-    }
+                </article>`),
+      );
+    };
 
-    const getData = async ()=>{
-        try {
-            apiRequest = await fetch ("https://dummyjson.com/recipes")
-        apiRequest = await apiRequest.json()
-        apiRequest = apiRequest.recipes
-        console.log(apiRequest);
-        displayData()
-        } catch (error) {
-            console.log(error);
-        }
-        
-    }
-    getData()
+    const getData = async () => {
+      try {
+        apiRequest = await fetch("https://dummyjson.com/recipes");
+        apiRequest = await apiRequest.json();
+        apiRequest = apiRequest.recipes;
+        displayData();
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getData();
 
-    const displayFav =()=>{
-        const result = document.querySelector("#favourites")
-        favData= JSON.parse(localStorage.getItem('recipes')) || []
-        result.innerHTML=''
-         favData.map((each,index)=>(result.innerHTML+=`<article class="flex flex-col bg-amber-300 rounded-sm border-1 border-white shadow-sm text-center p-2 hover:shadow-[0_0_10px_black] hover:scale-[1.01] transition-all duration-370 ease-in-out">
-                    <div class="w-full my-1  relative">
-                        <span class="absolute top-0 left-0 text-green-500 text-shadow-xs font-bold text-sm">${each.id}</span>
-                        <h2 class="font-bold text-white text-shadow-sm">${each.name}</h2>
+    const displayFav = () => {
+      const result = document.querySelector("#favourites");
+      favData = JSON.parse(localStorage.getItem("recipes")) || [];
+      result.innerHTML = "";
+      favData.map(
+        (each) =>
+          (result.innerHTML += `<article class="flex flex-col bg-amber-300 rounded-sm border-1 border-white shadow-sm text-center p-2 hover:shadow-[0_0_10px_black] hover:scale-[1.01] transition-all duration-370 ease-in-out group relative">
+            <span class="absolute top-0 left-1 text-green-500 text-shadow-xs font-bold text-sm">${each.id}</span>
+                    <div class="w-full my-1 ">
+                        <h2 class="font-bold text-white text-shadow-sm truncate">${each.name}</h2>
                     </div>
                     
                     <div class="w-auto h-auto rounded-sm overflow-hidden border-1 border-black mb-1 relative">
-                        <span class="absolute top-1 left-1 text-yellow-500 text-shadow-xs font-bold"><i class="fa-solid fa-star text-sm"></i> ${each.rating}</span>
-                        <img class="h-full w-full object-cover" src="${each.image}" alt="${each.name}">
-                        <button class="absolute top-1 right-1 text-red-600 text-shadow-xs font-bold  p-0 hover:scale-[1.2] active:scale-[0.9] active:text-red-600 hover:text-red-700 transition-all duration-350 ease-in-out" title="DELETE FAVOUTITE" onclick="deleteFav(${index})">
+                        <span class="absolute top-1 left-1 text-yellow-500 text-shadow-xs font-bold z-99"><i class="fa-solid fa-star text-sm"></i> ${each.rating}</span>
+                        <img class="h-full w-full object-cover group-hover:scale-[1.05] transition-all duration-350 ease-in-out" src="${each.image}" alt="${each.name}">
+                        <button class="absolute top-1 right-1 text-red-600 text-shadow-xs font-bold  p-0 hover:scale-[1.2] active:scale-[0.9] active:text-red-600 hover:text-red-700 transition-all duration-350 ease-in-out cursor-pointer" title="DELETE FAVOUTITE" onclick="deleteFav(${each.id})">
                             <i class="fa-solid fa-trash"></i>
                         </button>
                         <span class="absolute bottom-0.5 right-0.5 leading-none p-1 text-xs font-medium bg-green-500 border-1   rounded-full">
                             ${each.difficulty}
                         </span>
                     </div>
-                    <div class="h-auto w-auto text-center">
+                    <div class="h-auto w-auto text-center ">
                         <p class="h-auto w-auto text-center line-clamp-3 text-lg font-bold border-b-1" >
                             ${each.cuisine}
                         </p>
-                        <p class="line-clamp-6 m-2 border-1 rounded-lg bg-gray-200 font-medium text-sm">${each.ingredients}</p>
+                        <div class="relative w-auto ">
+                            <p class="line-clamp-6 m-2 border-1 rounded-lg bg-gray-200 font-medium text-sm ">${each.ingredients}  </p>
+                        <button class="absolute scale-0 opacity-0 group-hover:opacity-100 group-hover:scale-100  -top-3 -right-1 bg-yellow-500 border-1 p-1 rounded-lg text-white text-sm font-bold  p-0 hover:scale-[1.2] active:scale-[0.9] active:text-red-600 hover:text-yellow-500 hover:bg-white transition-all duration-350 ease-in-out cursor-pointer" title="EDIT INGREDIENTS" onclick="editIngredients(${each.id})"><i class="fa-solid fa-pen"></i></button>
+                        </div>
+                        
                         
                     </div>
 
 
-                </article>`))
-    
-    }
-    displayFav()
+                </article>`),
+      );
+    };
+    displayFav();
 
-    const addToFav=(id)=>{
-        try {
-            let fav = apiRequest.find((each)=>each.id === id)
-        if (favData.some((each)=>each.id == id)) {
-            alert("already in fvourites")
-            return;
+    const addToFav = (id) => {
+      try {
+        let fav = apiRequest.find((each) => each.id === id);
+        if (favData.some((each) => each.id == id)) {
+          alert("already in fvourites");
+          return;
         }
-        favData.unshift(fav)
-        localStorage.setItem('recipes', JSON.stringify(favData))
-        console.log(favData);
-        displayFav()
-        } catch (error) {
-            console.log(error);
-            
-        }
-    }
+        favData.unshift(fav);
+        localStorage.setItem("recipes", JSON.stringify(favData));
 
-    const deleteFav=(id)=>{
-        try {
-            favData.splice(id,1)
-        localStorage.setItem('recipes', JSON.stringify(favData))
+        displayFav();
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-        displayFav()        
-        } catch (error) {
-            console.log(error);
-            
-        }
-    }
+    const deleteFav = (id) => {
+      try {
+        favData = favData.filter((each) => each.id !== id);
+        localStorage.setItem("recipes", JSON.stringify(favData));
 
+        displayFav();
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-    const searchInput =()=>{
-        const search = document.querySelector("#search").value.trim().toLowerCase()
+    const searchInput = () => {
+      const search = document
+        .querySelector("#search")
+        .value.trim()
+        .toLowerCase();
 
-        const searchDisplay =document.querySelector("#searchResult")
+      const searchDisplay = document.querySelector("#searchResult");
 
-        let searchResult = apiRequest.filter((each)=>each.name.toLowerCase().includes(search))
-         searchDisplay.innerHTML=' '
-    if (searchResult.length===0) {
-        searchDisplay.innerHTML=" "
+      let searchResult = apiRequest.filter((each) =>
+        each.name.toLowerCase().includes(search),
+      );
+      searchDisplay.innerHTML = " ";
+      if (searchResult.length === 0) {
+        searchDisplay.innerHTML = " ";
         return;
-    }
-        if (!search) {
-            alert("enter a value")
-            return
-        }
-    
+      }
+      if (!search) {
+        alert("enter a value");
+        return;
+      }
 
-        searchResult.map((each,index)=>(searchDisplay.innerHTML+=`<article class="flex flex-col bg-amber-300 rounded-sm border-1 border-white shadow-sm text-center p-2 hover:shadow-[0_0_10px_black] hover:scale-[1.01] transition-all duration-370 ease-in-out flex-none max-w-56">
-                    <div class="w-full my-1  relative">
-                        <span class="absolute top-0 left-0 text-green-500 text-shadow-xs font-bold text-sm">${each.id}</span>
+      searchResult.map(
+        (each, index) =>
+          (searchDisplay.innerHTML += `<article class="flex flex-col bg-amber-300 rounded-sm border-1 border-white shadow-sm text-center p-2 hover:shadow-[0_0_10px_black] hover:scale-[1.01] transition-all duration-370 ease-in-out flex-none max-w-56 relative group">
+            <span class="absolute top-0 left-1 text-green-500 text-shadow-xs font-bold text-sm">${each.id}</span>
+                    <div class="w-full my-1 ">
                         <h2 class="font-bold text-white text-shadow-sm truncate">${each.name}</h2>
                     </div>
                     
                     <div class="w-auto h-auto rounded-sm overflow-hidden border-1 border-black mb-1 relative">
-                        <span class="absolute top-1 left-1 text-yellow-500 text-shadow-xs font-bold"><i class="fa-solid fa-star text-sm"></i> ${each.rating}</span>
-                        <img class="h-full w-full object-cover" src="${each.image}" alt="${each.name}">
-                        <button class="absolute top-1 right-1 text-red-600 text-shadow-xs font-bold p-0 hover:scale-[1.2] active:scale-[0.9] active:text-red-600 hover:text-red-700 transition-all duration-350 ease-in-out" title="ADD TO FAVOUTITES" onclick="addToFav(${each.id})">
+                        <span class="absolute top-1 left-1 text-yellow-500 text-shadow-xs font-bold z-99"><i class="fa-solid fa-star text-sm"></i> ${each.rating}</span>
+                        <img class="h-full w-full object-cover group-hover:scale-[1.01]" src="${each.image}" alt="${each.name}">
+                        <button class="absolute top-1 right-1 text-red-600 text-shadow-xs font-bold p-0 hover:scale-[1.2] active:scale-[0.9] active:text-red-600 hover:text-red-700 transition-all duration-350 ease-in-out cursor-pointer" title="ADD TO FAVOUTITES" onclick="addToFav(${each.id})">
                             <i class="fa-regular fa-heart"></i>
                         </button>
                         <span class="absolute bottom-0.5 right-0.5 leading-none p-1 text-xs font-medium bg-green-500 border-1   rounded-full">
@@ -203,8 +233,103 @@
                     </div>
 
 
-                </article>`))
-    }
+                </article>`),
+      );
+    };
 
-</script>
+    const editIngredients = (id) => {
+      let each = favData.find((each) => each.id == id);
+      const edit = document.getElementById("edit");
+      edit.classList =
+        "bg-amber-100/20 backdrop-blur z-100 fixed top-0 right-0 left-0 bottom-0 flex items-center justify-center";
+
+      edit.innerHTML = `<article
+          class="flex flex-col bg-amber-300 rounded-sm border-1 border-white shadow-sm text-center p-2 hover:shadow-[0_0_10px_black] hover:scale-[1.01] transition-all duration-370 ease-in-out group relative mx-2 max-w-100 "
+        >
+          <span
+            class="absolute top-0 left-1 text-green-500 text-shadow-xs font-bold text-sm"
+            >${each.id}</span
+          >
+          <div class="w-full my-1">
+            <h2 class="font-bold text-white text-shadow-sm truncate">
+              ${each.name}
+            </h2>
+          </div>
+
+          <div
+            class="w-auto h-auto rounded-sm overflow-hidden border-1 border-black mb-1 relative"
+          >
+            <span
+              class="absolute z-100 top-1 left-1 text-yellow-500 text-shadow-xs font-bold"
+              ><i class="fa-solid fa-star text-sm"></i> ${each.rating}</span
+            >
+            <img
+              class="h-full w-full object-contain group-hover:scale-[1.05] transition-all duration-350 ease-in-out"
+              src="${each.image}"
+              alt="${each.name}"
+            />
+            <span
+              class="absolute bottom-0.5 right-0.5 leading-none p-1 text-xs font-medium bg-green-500 border-1 rounded-full"
+            >
+              ${each.difficulty}
+            </span>
+          </div>
+          <div class="h-auto w-auto text-center">
+            <p
+              class="h-auto w-auto text-center line-clamp-3 text-lg font-bold border-b-1"
+            >
+              ${each.cuisine}
+            </p>
+            <div class="relative w-auto">
+              <textarea id="editData"
+                class="line-clamp-6 mx-auto my-2 border-1 rounded-lg bg-gray-200 font-medium text-sm w-full p-2"
+              >
+                ${each.ingredients}
+              </textarea>
+              <button class="absolute scale-0 opacity-0 group-hover:opacity-100 group-hover:scale-100  -top-3 -right-1 bg-yellow-500 border-1 p-1 rounded-lg text-white text-sm font-bold  p-0 hover:scale-[1.2] active:scale-[0.9] active:text-red-600 hover:text-yellow-500 hover:bg-white transition-all duration-350 ease-in-out cursor-pointer" title="RESET" onclick="resetIngBtn(${each.id})"><i class="fa-solid fa-rotate-left"></i></button>
+            </div>
+          </div>
+          <div class="w-full flex justify-evenly items-center">
+            <button
+              class=" text-white font-medium px-3 py-2 bg-red-600 hover:scale-[1.05] active:scale-[0.9] active:text-red-600  transition-all duration-350 ease-in-out cursor-pointer rounded-lg" onclick="cancelBtnClick()"
+              title="CANCEL"
+             
+            >
+              CANCEL
+            </button>
+            <button
+              class="text-white font-medium px-3 py-2 bg-green-800 hover:scale-[1.05] active:scale-[0.9] active:text-green-800  transition-all duration-350 ease-in-out cursor-pointer rounded-lg" onclick="saveBtnClick(${each.id})"
+              title="SAVE"
+             
+            >
+              SAVE
+            </button>
+            </div>
+        </article>`;
+
+    };
+
+    const cancelBtnClick = () => {
+      const edit = document.getElementById("edit");
+      edit.classList =
+        "hidden bg-amber-100/20 backdrop-blur z-100 fixed top-0 right-0 left-0 bottom-0 flex items-center justify-center";
+      edit.innerHTML = " ";
+    };
+
+    const saveBtnClick = (id) => {
+      let EditedInfo = document.querySelector("#editData").value.trim();
+      let saveData = favData.find((each) => each.id === id);
+      saveData.ingredients = EditedInfo;
+      deleteFav(id);
+      favData.unshift(saveData);
+      localStorage.setItem("recipes", JSON.stringify(favData));
+      cancelBtnClick();
+      displayFav();
+    };
+
+    const resetIngBtn = (id) => {
+      let resetVal = apiRequest.find((each) => each.id === id);
+      document.querySelector("#editData").value = resetVal.ingredients;
+    };
+  </script>
 </html>
